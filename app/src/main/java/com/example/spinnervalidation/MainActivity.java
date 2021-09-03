@@ -12,10 +12,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
     EditText phoneNumber;
     EditText password;
     Button login;
+    Spinner spinner;
     boolean isphoneNumberValid, isPasswordValid;
     String[] bankNames={"BOI","SBI","HDFC","PNB","OBC"};
     @Override
@@ -26,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         phoneNumber = (EditText) findViewById(R.id.editTextPhone);
         password = (EditText) findViewById(R.id.editTextTextPassword3);
         login = (Button) findViewById(R.id.login);
+        spinner = (Spinner) findViewById(R.id.spinner);
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -45,34 +51,39 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     private void SetValidation() {
+        Pattern sPattern = Pattern.compile("^([A-Z]{0,2})?(\\d)?([A-Z-]{0,5})"); // ^([1-9][0-9]{0,2})?(\\.[0-9]?)?$
+        Pattern mPattern = Pattern.compile("^([1-9][0-9]{0,2})?(\\.[0-9]?)?$");
 
-            // Check for a valid email address.
-            if (phoneNumber.getText().toString().isEmpty()) {
-                phoneNumber.setError(getResources().getString(R.string.phoneNumber_error));
-                isphoneNumberValid = false;
-            } else if (!Patterns.EMAIL_ADDRESS.matcher(phoneNumber.getText().toString()).matches()) {
-                phoneNumber.setError(getResources().getString(R.string.error_invalid_email));
-                isphoneNumberValid = false;
-            } else {
-                isphoneNumberValid = true;
-            }
+        Matcher matcher = mPattern.matcher((phoneNumber.toString()));
+        if(!matcher.find())
+        // Check for a valid phoneNumber address.
+        if (phoneNumber.getText().toString().isEmpty()) {
+            phoneNumber.setError(getResources().getString(R.string.phoneNumber_error));
+            isphoneNumberValid = false;
 
-            // Check for a valid password.
-            if (password.getText().toString().isEmpty()) {
-                password.setError(getResources().getString(R.string.password_error));
-                isPasswordValid = false;
-            } else if (password.getText().length() < 8) {
-                password.setError(getResources().getString(R.string.error_invalid_password));
-                isPasswordValid = false;
-            } else {
-                isPasswordValid = true;
-            }
-
-            if (isphoneNumberValid && isPasswordValid) {
-                Toast.makeText(getApplicationContext(), "Successfully", Toast.LENGTH_SHORT).show();
-            }
-
+        } else if (!Patterns.PHONE.matcher(phoneNumber.getText().toString()).matches()) {
+            phoneNumber.setError(getResources().getString(R.string.error_invalid_email));
+            isphoneNumberValid = false;
+        } else {
+            isphoneNumberValid = true;
         }
+
+        // Check for a valid password.
+        if (password.getText().toString().isEmpty()) {
+            password.setError(getResources().getString(R.string.password_error));
+            isPasswordValid = false;
+        } else if (password.getText().length() < 8 ) {
+            password.setError(getResources().getString(R.string.error_invalid_password));
+            isPasswordValid = false;
+        } else {
+            isPasswordValid = true;
+        }
+
+        if (isphoneNumberValid && isPasswordValid) {
+            Toast.makeText(getApplicationContext(), "Successfully", Toast.LENGTH_SHORT).show();
+        }
+
+    }
 
 
     //Performing action onItemSelected and onNothing selected
