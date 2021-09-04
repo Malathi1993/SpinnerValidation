@@ -12,6 +12,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.material.internal.TextWatcherAdapter;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,12 +32,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         phoneNumber = (EditText) findViewById(R.id.editTextPhone);
         password = (EditText) findViewById(R.id.editTextTextPassword3);
         login = (Button) findViewById(R.id.login);
-        spinner = (Spinner) findViewById(R.id.spinner);
+       //spinner = (Spinner) findViewById(R.id.spinner);
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SetValidation();
+
             }
         });
 
@@ -50,21 +53,23 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spin.setAdapter(aa);
     }
 
-    private void SetValidation() {
-        Pattern sPattern = Pattern.compile("^([A-Z]{0,2})?(\\d)?([A-Z-]{0,5})"); // ^([1-9][0-9]{0,2})?(\\.[0-9]?)?$
-        Pattern mPattern = Pattern.compile("^([1-9][0-9]{0,2})?(\\.[0-9]?)?$");
 
-        Matcher matcher = mPattern.matcher((phoneNumber.toString()));
+   private void SetValidation() {
+
+       String mobilePattern = "[5]{1}[0-9]{11}";
+       String passwordPattern ="^.*(?=.{8,})(?=.*\\d)(?=.*[a-zA-Z])|(?=.{8,})(?=.*\\d)(?=.*[!@#$%^&])|(?=.{8,})(?=.*[a-zA-Z])(?=.*[!@#$%^&]).*$";
+
+       Matcher matcher = mobilePattern.matcher((phoneNumber.toString()));
         if(!matcher.find())
         // Check for a valid phoneNumber address.
         if (phoneNumber.getText().toString().isEmpty()) {
-            phoneNumber.setError(getResources().getString(R.string.phoneNumber_error));
+           phoneNumber.setError(getResources().getString(R.string.phoneNumber_error));
             isphoneNumberValid = false;
 
         } else if (!Patterns.PHONE.matcher(phoneNumber.getText().toString()).matches()) {
             phoneNumber.setError(getResources().getString(R.string.error_invalid_email));
             isphoneNumberValid = false;
-        } else {
+       } else {
             isphoneNumberValid = true;
         }
 
